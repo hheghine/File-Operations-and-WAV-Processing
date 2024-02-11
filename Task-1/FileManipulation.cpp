@@ -11,7 +11,7 @@ void	writing_in_file(const std::string &file_name, const std::string& str)
 		std::cout << "\nData written to file \"" << file_name << "\" successfully.\n" << std::endl;
 	}
 	else
-		std::cout << "\nError: unable to open the file\n" << std::endl;
+		std::cerr << "\nError: unable to open the file\n" << std::endl;
 }
 
 void	reading_from_file(const std::string &file_name)
@@ -27,7 +27,7 @@ void	reading_from_file(const std::string &file_name)
 		file.close();
 	}
 	else
-		std::cout << "\nError: unable to open the file\n" << std::endl;
+		std::cerr << "\nError: unable to open the file\n" << std::endl;
 }
 
 void	remove_second_line(const std::string &file_name)
@@ -55,7 +55,7 @@ void	remove_second_line(const std::string &file_name)
 		outfile.close();
 	}
 	else
-		std::cout << "\nError: unable to open the file\n" << std::endl;
+		std::cerr << "\nError: unable to open the file\n" << std::endl;
 }
 
 void	reverse_words_in_lines(const std::string &file_name)
@@ -94,8 +94,8 @@ void	reverse_words_in_lines(const std::string &file_name)
 			std::cout << "\nWords reversed in lines in " << file_name << " successfully.\n" << std::endl;
 		}
 		else
-		std::cout << "\nError: unable to open the file\n" << std::endl;
+		std::cerr << "\nError: unable to open the file\n" << std::endl;
 	}
 	else
-		std::cout << "\nError: unable to open the file\n" << std::endl;
+		std::cerr << "\nError: unable to open the file\n" << std::endl;
 }
