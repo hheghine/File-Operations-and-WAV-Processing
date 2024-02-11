@@ -1,10 +1,12 @@
 #ifndef AUDIOFILEMANIPULATION_H
 # define AUDIOFILEMANIPULATION_H
 
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <algorithm>
+# include <iostream>
+# include <fstream>
+# include <vector>
+# include <algorithm>
+
+# define CHUNK_SIZE 1024
 
 struct	WAV
 {
@@ -24,5 +26,7 @@ struct	WAV
 };
 
 void	print_wav_file(const std::string &file_name);
+void	copy_wav_file(const std::string &input_file, const std::string &output_file);
+void	reverse_audio_file(const std::string &input_file, const std::string &output_file);
 
 #endif
