@@ -1,10 +1,22 @@
 #include "AudioFileManipulation.h"
 
+static bool	is_wav_file(const std::string &file_name)
+{
+	if (file_name.size() < 4)
+		return false;
+	return file_name.substr(file_name.size() - 4) == ".wav";
+}
+
 void	print_wav_file(const std::string &file_name)
 {
 	std::ifstream	file(file_name, std::ios::binary);
 	WAV				wav;
 
+	if (!is_wav_file(file_name))
+	{
+		std::cerr << "Error: not a WAV file" << std::endl;
+		return ;
+	}
 	if (!file)
 	{
 		std::cerr << "Error: unable to open \"" << file_name << "\" file." << std::endl;
