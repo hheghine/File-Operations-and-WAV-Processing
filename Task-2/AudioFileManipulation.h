@@ -6,7 +6,7 @@
 #include <vector>
 #include <algorithm>
 
-typedef struct	s_wav
+struct	WAV
 {
 	char	RIFF[4];
 	int32_t	fileSize;
@@ -21,7 +21,8 @@ typedef struct	s_wav
 	int16_t	bitsPerSample;
 	char	data[4];
 	int32_t	dataSize;
-}			t_wav;
+};
 
+void	print_wav_file(const std::string &file_name);
 
 #endif
