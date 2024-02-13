@@ -24,12 +24,12 @@ void	print_wav_file(const std::string &file_name)
 	}
 	file.read(reinterpret_cast<char *>(&wav), sizeof(WAV));
 	std::cout << "File Size: " << wav.fileSize << " bytes" << std::endl;
-    std::cout << "Audio Format: " << wav.audioFormat << std::endl;
-    std::cout << "Num Channels: " << wav.nbChannels << std::endl;
-    std::cout << "Sample Rate: " << wav.sampleRate << " Hz" << std::endl;
-    std::cout << "Byte Rate: " << wav.byteRate << " bytes/sec" << std::endl;
-    std::cout << "Bits Per Sample: " << wav.bitsPerSample << " bits" << std::endl;
-    std::cout << "Data Size: " << wav.dataSize << " bytes" << std::endl;
+	std::cout << "Audio Format: " << wav.audioFormat << std::endl;
+	std::cout << "Num Channels: " << wav.nbChannels << std::endl;
+	std::cout << "Sample Rate: " << wav.sampleRate << " Hz" << std::endl;
+	std::cout << "Byte Rate: " << wav.byteRate << " bytes/sec" << std::endl;
+	std::cout << "Bits Per Sample: " << wav.bitsPerSample << " bits" << std::endl;
+	std::cout << "Data Size: " << wav.dataSize << " bytes" << std::endl;
 }
 
 void	copy_wav_file(const std::string &input_file, const std::string &output_file)
@@ -75,8 +75,8 @@ void	copy_wav_file(const std::string &input_file, const std::string &output_file
 void	reverse_audio_file(const std::string &input_file, const std::string &output_file)
 {
 	WAV					wav;
-	// int					nb_samples;
-	// int					bytes_per_sample;
+	int					nb_samples;
+	int					bytes_per_sample;
 	int					start_idx;
 	int					end_idx;
 	std::ifstream		infile(input_file, std::ios::binary);
@@ -102,18 +102,21 @@ void	reverse_audio_file(const std::string &input_file, const std::string &output
 	}
 	outfile.write(reinterpret_cast<char *>(&wav), sizeof(WAV));
 
-	// nb_samples = wav.dataSize / (wav.nbChannels * (wav.bitsPerSample / 8));
-	// bytes_per_sample = wav.nbChannels * (wav.bitsPerSample / 8);
+	nb_samples = wav.dataSize / (wav.nbChannels * (wav.bitsPerSample / 8));
+	bytes_per_sample = wav.nbChannels * (wav.bitsPerSample / 8);
 
 	std::vector<char>	audio_data(wav.dataSize);
 
 	infile.read(audio_data.data(), wav.dataSize);
-	// for (int i = 0; i < nb_samples; i++)
-	// {
-	// 	start_idx = i * bytes_per_sample;
-	// 	end_idx = start_idx + bytes_per_sample;
-	// 	std::reverse(audio_data.begin() + start_idx, audio_data.begin() + end_idx);
-	// }
-	std::reverse(audio_data.begin(), audio_data.end());
+	for (int i = 0; i < nb_samples; i++)
+	{
+		for (int channel = 0; channel < wav.nbChannels; channel ++)
+		{
+			start_idx = i * bytes_per_sample + channel * (wav.bitsPerSample / 8);
+			end_idx = start_idx + (wav.bitsPerSample / 8);
+			std::reverse(audio_data.begin() + start_idx, audio_data.begin() + end_idx);
+		}
+	}
+	// std::reverse(audio_data.begin(), audio_data.end());
 	outfile.write(audio_data.data(), wav.dataSize);
 }
