@@ -72,11 +72,17 @@ void	copy_wav_file(const std::string &input_file, const std::string &output_file
 	std::cout << "WAV file copied successfully" << std::endl;
 }
 
+template <typename T>
+void	reverseAudioSamples(std::vector<T> &audio_data)
+{
+    std::reverse(audio_data.begin(), audio_data.end());
+}
+
 void	reverse_audio_file(const std::string &input_file, const std::string &output_file)
 {
 	WAV					wav;
-	int					nb_samples;
-	int					bytes_per_sample;
+	// int					nb_samples;
+	// int					bytes_per_sample;
 	int					start_idx;
 	int					end_idx;
 	std::ifstream		infile(input_file, std::ios::binary);
@@ -98,25 +104,43 @@ void	reverse_audio_file(const std::string &input_file, const std::string &output
 	if (!outfile)
 	{
 		std::cerr << "Error: cannot create output file: " << output_file << std::endl;
-        return;
+		return;
 	}
 	outfile.write(reinterpret_cast<char *>(&wav), sizeof(WAV));
 
-	nb_samples = wav.dataSize / (wav.nbChannels * (wav.bitsPerSample / 8));
-	bytes_per_sample = wav.nbChannels * (wav.bitsPerSample / 8);
+	// nb_samples = wav.dataSize / (wav.nbChannels * (wav.bitsPerSample / 8));
+	// bytes_per_sample = wav.nbChannels * (wav.bitsPerSample / 8);
 
 	std::vector<char>	audio_data(wav.dataSize);
 
 	infile.read(audio_data.data(), wav.dataSize);
-	for (int i = 0; i < nb_samples; i++)
-	{
-		for (int channel = 0; channel < wav.nbChannels; channel ++)
-		{
-			start_idx = i * bytes_per_sample + channel * (wav.bitsPerSample / 8);
-			end_idx = start_idx + (wav.bitsPerSample / 8);
-			std::reverse(audio_data.begin() + start_idx, audio_data.begin() + end_idx);
-		}
-	}
+
+	// for (int i = 0; i < nb_samples; i++)
+	// {
+	// 	for (int channel = 0; channel < wav.nbChannels; channel ++)
+	// 	{
+	// 		start_idx = i * bytes_per_sample + channel * (wav.bitsPerSample / 8);
+	// 		end_idx = start_idx + (wav.bitsPerSample / 8);
+	// 		std::reverse(audio_data.begin() + start_idx, audio_data.begin() + end_idx);
+	// 	}
+	// }
 	// std::reverse(audio_data.begin(), audio_data.end());
+
+	switch (wav.bitsPerSample)
+	{
+		case 8:
+			reverseAudioSamples(reinterpret_cast<std::vector<int8_t>&>(audio_data));
+			break;
+		case 16:
+			reverseAudioSamples(reinterpret_cast<std::vector<int16_t>&>(audio_data));
+			break;
+		case 32:
+			reverseAudioSamples(reinterpret_cast<std::vector<int32_t>&>(audio_data));
+			break;
+		default:
+			std::cerr << "Unsupported sample size: " << wav.bitsPerSample << std::endl;
+			return;
+	}
+
 	outfile.write(audio_data.data(), wav.dataSize);
 }
